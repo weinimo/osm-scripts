@@ -1,0 +1,50 @@
+## Basic OSM toolchain setup for Fedora (tested under Fedora 20)
+
+# Al root: Install some basic stuff
+yum install mapnik mapnik-devel mapnik-python python-psycopg2 python-shapely \
+    gdal-python proj-epsg postgis postgresql-server postgresql-contrib carto \
+    unifont-fonts
+postgresql-setup initdb
+
+# in /var/lib/pgsql/data/postgresql.conf ändern:
+shared_buffers = 128MB
+checkpoint_segments = 10
+maintenance_work_mem = 128MB
+
+# in /var/lib/pgsql/data/pg_hba.conf peer und ident in trust umändern
+
+# As root, increase the maximum shared memory size allowed by the kernel.
+sysctl -w kernel.shmmax=268435456
+# Make the change permanent by adding the following entry to /etc/sysctl.conf
+kernel.shmmax = 268435456
+
+# As root, start the database server and make it start on boot.
+systemctl start postgresql
+# Optional:
+systemctl enable postgresql
+
+su - postgres
+createuser osm
+createdb --encoding=UTF8 --owner=osm gis
+psql -d gis -c "CREATE EXTENSION hstore;"
+psql -d gis -c "CREATE EXTENSION postgis;"
+echo "ALTER TABLE geometry_columns OWNER TO osm; ALTER TABLE spatial_ref_sys OWNER TO osm;"  | psql -d gis
+# with carto generated XML we need to have access with the system user to the DB
+createuser tom
+psql -d gis -c "grant all privileges on database gis on tom;"
+
+# Create an osm directory to hold all osm software.
+mkdir ~/osm
+cd ~/osm
+# Build osm2pgsql from the source
+# As root, install the osm2pgsql dependencies.
+yum install geos-devel proj-devel postgresql-devel libxml2-devel bzip2-devel \
+    gcc-c++ protobuf-c-devel autoconf automake libtool
+git clone https://github.com/openstreetmap/osm2pgsql.git
+cd osm2pgsql/
+./autogen.sh
+./configure
+sed -i 's/-g -O2/-O2 -march=native -fomit-frame-pointer/' Makefile
+make -j2
+
+# Execute the db-update.sh script to download the OSM data and import it to the DB
