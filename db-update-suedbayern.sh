@@ -21,7 +21,7 @@ aria2c -q -d ${BASEDIR} ${OSM_DL_URL}
 
 echo "## Starting DB import"
 ${BASEDIR}/osm2pgsql/osm2pgsql -s -k -U osm --number-processes ${OSM2PGSQL_PROCS} \
-    -S ${STYLEFILE} -C ${OSM2PGSQL_CACHE} ${OSM2PGSQL_BBOX} \
+    --multi-geometry -S ${STYLEFILE} -C ${OSM2PGSQL_CACHE} ${OSM2PGSQL_BBOX} \
     "${BASEDIR}/$(basename ${OSM_DL_URL})"
 
 
