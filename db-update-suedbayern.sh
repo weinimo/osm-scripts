@@ -21,7 +21,8 @@ aria2c --summary-interval=0 -d ${BASEDIR} ${OSM_DL_URL}
 
 echo "## Starting DB import (using a new screen session)"
 echo "## Detach using <C-a d>; Reattach using \"screen -r\""
-screen -m -S osm2pgsql ${BASEDIR}/osm2pgsql/osm2pgsql -s -k -U osm --number-processes ${OSM2PGSQL_PROCS} \
+echo "## You will find a logfile ~/screenlog.0"
+screen -L -m -S osm2pgsql ${BASEDIR}/osm2pgsql/osm2pgsql -s -k -U osm --number-processes ${OSM2PGSQL_PROCS} \
     --multi-geometry -S ${STYLEFILE} -C ${OSM2PGSQL_CACHE} ${OSM2PGSQL_BBOX} \
     "${BASEDIR}/$(basename ${OSM_DL_URL})"
 
