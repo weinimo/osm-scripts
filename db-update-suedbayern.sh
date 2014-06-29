@@ -1,13 +1,13 @@
 #! /usr/bin/env bash
 # Downloads fresh OSM data and imports (parts of) it into the local database
 
-BASEDIR="~/osm"
+BASEDIR="${HOME}/osm"
 OSM_DL_URL="http://download.geofabrik.de/europe/germany/bayern-latest.osm.pbf"
 MMLFILE="${BASEDIR}/openstreetmap-carto/project.mml"
 XMLFILE="${BASEDIR}/openstreetmap-carto/project.xml"
 STYLEFILE="${BASEDIR}/openstreetmap-carto/openstreetmap-carto.style"
-OSM2PGSQL_PROCS="2"
-OSM2PGSQL_CACHE="1300"
+OSM2PGSQL_PROCS="4"
+OSM2PGSQL_CACHE="2300"
 OSM2PGSQL_BBOX="--bbox 11.838,47.436,13.03,49.407"
 
 
@@ -15,7 +15,7 @@ OSM2PGSQL_BBOX="--bbox 11.838,47.436,13.03,49.407"
 #carto ${MMLFILE} > ${XMLFILE} &
 #PID_CARTO = $!
 echo "## Downloading from ${OSM_DL_URL}"
-aria2c -q -d ${BASEDIR} ${OSM_DL_URL}
+aria2c --summary-interval=0 -d ${BASEDIR} ${OSM_DL_URL}
 #wait PID_CARTO
 #[[ $? -eq 0 ]] || echo "ERROR: carto failed with exit code $?"
 
