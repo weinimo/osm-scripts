@@ -31,7 +31,7 @@ psql -d gis -c "CREATE EXTENSION postgis;"
 echo "ALTER TABLE geometry_columns OWNER TO osm; ALTER TABLE spatial_ref_sys OWNER TO osm;"  | psql -d gis
 # with carto generated XML we need to have access with the system user to the DB
 createuser tom
-psql -d gis -c "grant all privileges on database gis on tom;"
+psql -d gis -c "grant all privileges on database gis to tom;"
 
 # Create an osm directory to hold all osm software.
 mkdir ~/osm
