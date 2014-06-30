@@ -31,7 +31,7 @@ echo "## Generating tiles"
 ${MAPNIKDIR}/polytiles.py -u osm --bbox 11.4479 48.13509 11.44923 48.13024 \
     -z 16 16 -t ${TILESDIR} -s ${XMLFILE} || ( echo "Mapnik failed"; exit 1 )
 
-if [[ ( -n ${SCPSOURCE} ) -a ( -n ${SCPTARGET} ) ]] ; then
+if [[ -n ${SCPSOURCE} ]] ; then
     echo "## Uploading tiles to the tiles server"
     scp -r ${SCPSOURCE} ${SCPTARGET}
 fi
