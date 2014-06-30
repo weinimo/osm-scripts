@@ -17,9 +17,11 @@ while getopts "uah" options; do
   case $options in
     u ) SCPSOURCE="${TILESDIR}/16/34852"
         SCPTARGET="n36l:/var/www/osm/tiles/16/"
+        BBOX="11.4479 48.13509 11.44923 48.13024"
         ;;
     a ) SCPSOURCE="${TILESDIR}/*"
         SCPTARGET="n36l:/var/www/osm/tiles/"
+        BBOX="10.92 47.436 13.03 49.407"
         ;;
     h ) usage
         exit 0
@@ -27,8 +29,15 @@ while getopts "uah" options; do
   esac
 done
 
+if [[ -z ${BBOX}} ]] ; then
+    echo "Please use this script with an argument"
+    echo ""
+    usage
+    exit 0
+fi
+
 echo "## Generating tiles"
-${MAPNIKDIR}/polytiles.py -u osm --bbox 11.4479 48.13509 11.44923 48.13024 \
+${MAPNIKDIR}/polytiles.py -u osm --bbox ${BBOX} \
     -z 16 16 -t ${TILESDIR} -s ${XMLFILE} || ( echo "Mapnik failed"; exit 1 )
 
 if [[ -n ${SCPSOURCE} ]] ; then
