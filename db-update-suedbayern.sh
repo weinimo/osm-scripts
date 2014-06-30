@@ -8,7 +8,7 @@ XMLFILE="${BASEDIR}/openstreetmap-carto/project.xml"
 STYLEFILE="${BASEDIR}/openstreetmap-carto/openstreetmap-carto.style"
 OSM2PGSQL_PROCS="4"
 OSM2PGSQL_CACHE="2300"
-OSM2PGSQL_BBOX="--bbox 11.838,47.436,13.03,49.407"
+OSM2PGSQL_BBOX="--bbox 10.92,47.436,13.03,49.407"
 
 
 
